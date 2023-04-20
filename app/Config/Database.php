@@ -31,6 +31,7 @@ class Database extends Config
         'password' => '',
         'database' => '',
         'DBDriver' => 'MySQLi',
+        'port'     => '3306',
         'DBPrefix' => '',
         'pConnect' => false,
         'DBDebug'  => true,
