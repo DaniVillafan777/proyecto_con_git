@@ -1,7 +1,7 @@
-<form id="frm-perona">
+<form id="frm-persona">
     <div class="form-group">
         <label for="nombre">Nombre</label>
-        <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ingrese su nombre">
+        <input type="text" id="nombre" name="nombre" class="form-control" value="" placeholder="Ingrese su nombre">
     </div>
     <div class="form-group">
         <label for="apellido">Apellido</label>

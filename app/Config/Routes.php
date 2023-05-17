@@ -39,6 +39,8 @@ $routes->get('mariposa', 'Home::mariposa');
 $routes->post('procesar', 'Home::procesa');
 $routes->get('persona/create', 'Home::frmPersona');
 $routes->post('persona', 'Home::createPersona');
+$routes->get('/eliminar/(:segment)', 'Home::eliminar/$1');
+$routes->get('/editar/(:segment)', 'Home::edit/$1');
 /*
  * --------------------------------------------------------------------
  * Additional Routing

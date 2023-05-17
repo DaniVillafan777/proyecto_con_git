@@ -23,7 +23,7 @@ $(document).ready(function () {
     // .on('change', function () {
         
     // })
-    $('#exampleModal').on('submit', '#frm-perona', function (e) {
+    $('#exampleModal').on('submit', '#frm-persona', function (e) {
         e.preventDefault();
         let form = $(this);
         let boton = $('#btn btn-primary');
@@ -31,7 +31,7 @@ $(document).ready(function () {
         var apellido = $('#apellido').val();
         var estado = $('#estado').val();
 
-            //nombre
+            nombre
             if (nombre === ''){
                 alert('Por favor ingrese su nombre');
                 return;
@@ -56,9 +56,9 @@ $(document).ready(function () {
                 return;
             }
             
-            //Si todo esta correcto
-            alert('Formulrio enviado correctamente');
-            this.submit();
+            // //Si todo esta correcto
+            // alert('Formulario enviado correctamente');
+            // this.submit();
         
             boton.prop('disabled', true);
         // let data = {
@@ -83,6 +83,11 @@ $(document).ready(function () {
                 // toastr.success(respuesta.mensaje);
             } else {
                 // toastr.error(respuesta.mensaje);
+                let mensajes = '';
+                $.each(respuesta.message, function (index, value) {
+                    mensajes += value + ' ';
+                });
+                alert(mensajes);
                 console.log(respuesta.message);
             }
         })
@@ -90,5 +95,45 @@ $(document).ready(function () {
         .always(function () {
             boton.prop('disabled', false);
         });
+
     });
+    $('#tbl-personas')
+    .on('click', '.btn-eliminar', function () {
+        let id = $(this).data('id');
+        // id = $(this).attr('data-id');
+        $.get(`eliminar/${id}`)
+        .done(function (respuesta) {
+            alert(respuesta.message);
+            // if (respuesta.status == 'success') {
+            //     // $('#tbl-personas').DataTable().ajax.reload();
+            // } else {
+            //     alert(respuesta.message);
+            // }
+        })
+        .fail(function (xhr, textStatus, errorThrown) {
+            alert('Peticion Fallada');
+            console.log(xhr, textStatus, errorThrown);
+        })
+    })
+    .on('click', '.btn-editar', function(){
+        let id = $(this).data('id');
+        let datos = $('#frm-persona');
+
+        $.get(`editar/${id}`)
+        .done(function (respuesta) {
+            // console.log(respuesta);
+            // return;
+            // datos.find('#nombre').val($(this).datos('nombre'));
+            // datos.find('#apellido').val($(this).datos('apellido'));
+            // datos.find('#fecha_registro').val($(this).datos('fecha_registro'));
+            // datos.find('#estado').val($(this).datos('estado'));      
+            $('#mdl-contenido').html(respuesta.data.vista);
+            $('#nombre').val(respuesta.data.nombre);
+            $('#apellido').val(respuesta.data.apellido);
+            $('#estado').val(respuesta.data.estado);
+            $('#exampleModal').modal('show');
+        })
+    });
+    $
+
 });

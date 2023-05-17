@@ -73,17 +73,75 @@ class Home extends BaseController
 
     public function createPersona()
     {
-        $datos = $this->request->getPost();
-        $personaModel = new PersonaModel();
-        if ($personaModel->insert($datos)){
-            $id = $personaModel->insertId();
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'nombre' => 'required|alpha',
+            'apellido' => 'required|alpha',
+            'estado' => 'required|alpha',
+        ]);
+            //si el nombre es vacio devolver error
+        // return var_dump($validation->withRequest($this->request)->run());
+        if (!$validation->withRequest($this->request)->run()) {
+            // Si la validación falla, reponder con los mensajes de error
             return $this->response->setJSON([
-                'status' => 'success', # success, fail, error
-                'data' => [
-                    'id' => $id
-                ],
-                'message' => 'Registro exitoso'
+                'status' => 'fail', # success, fail, error
+                'message' => $validation->getErrors()
             ]);
         }
+        $datos = $this->request->getPost();
+        $personaModel = new PersonaModel();
+        if (!$personaModel->insert($datos)){
+            return $this->response->setJSON([
+                'status' => 'error', # success, fail, error
+                'message' => 'Error en la bd al insertar'
+            ]);
+        }
+        $id = $personaModel->insertId();
+        return $this->response->setJSON([
+            'status' => 'success', # success, fail, error
+            'data' => [
+                'id' => $id
+            ],
+            'message' => 'Registro exitoso'
+        ]);
+    }   
+    
+    public function edit($id = null){
+        $personaModel = new PersonaModel();
+        $condicion = ['id_persona' => $id];
+        $datos = $personaModel->selectUsuarios($condicion);
+        $vista = view('frmPersona');
+        return $this->response->setJSON([
+            'sstatus' => 'success',
+            'data' => [
+                'id' => $id,
+                'datos' => $datos,
+                'vista' => $vista
+            ],
+            'message' => 'Registro exitoso'
+        ]);
+    }
+
+    public function eliminar($id_persona = null){
+        if (!is_numeric($id_persona)) {
+            return $this->response->setJSON([
+                'status' => 'error', # success, fail, error
+                'message' => 'No se encontro el registro a eliminar'
+            ]);	
+        }
+        // return var_dump($id_persona);
+        // $personaModel->eliminarRegistro($id_persona);
+        // return redirect()->to(base_url('/mariposa'));
+        $personaModel = new PersonaModel();
+       if ( !$personaModel->delete($id_persona) ) {
+            return $this->response->setJSON([
+                'status' => 'error', # success, fail, error
+                'message' => 'Error en la bd al eliminar'
+            ]);
+       }
+       return $this->response->setJSON([
+            'status' => 'success', # success, fail, error
+            'message' => 'Registro eliminado'
+       ]);
     }
 }

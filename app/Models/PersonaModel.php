@@ -44,9 +44,16 @@ class PersonaModel extends Model
         /** logica de la funcion */
     }
 
-    public function selectUsuarios()
+    public function selectUsuarios($condicion = null)
     {
-        return $this->select('id_persona,nombre, apellido, fecha_registro, estado')->findAll();
+        if($condicion == null){
+            return $this->select('id_persona,nombre, apellido, fecha_registro, estado')->findAll();
+        }
+        // return $this->where($condicion)->findAll();
+        return $this->select('id_persona,nombre, apellido, fecha_registro, estado')->where($condicion)->get()->getRowArray();
     }
-
+    public function eliminarRegistro($id_persona){
+        $this->db->where('id',$id_persona);
+        $this->db->delete('users');
+    }
 }
